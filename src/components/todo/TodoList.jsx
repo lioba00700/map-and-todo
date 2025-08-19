@@ -1,3 +1,5 @@
+// 2025.08.19 - 일정 배열을 Props로 받아 목록을 그리는 컴포넌트
+
 import TodoItem from "./TodoItem";
 
 const TodoList = ({title, todos, handleCheck, handleDelete}) => {

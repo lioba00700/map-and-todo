@@ -1,5 +1,4 @@
-// 2025.08.19 추가
-//사용자의 현재 위치를 수집하는 커스텀 Hook
+// 2025.08.19 - 사용자의 현재 위치를 수집하는 커스텀 Hook
 
 import { useEffect, useState } from "react"
 

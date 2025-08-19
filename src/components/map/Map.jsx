@@ -1,3 +1,5 @@
+// 2025.08.19 - Kakao Map API 활용해 구현한 지도 컴포넌트
+
 import { useEffect } from "react";
 
 const {kakao} = window;

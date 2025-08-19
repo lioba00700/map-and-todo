@@ -1,3 +1,5 @@
+// 2025.08.19 - TodoList에 사용되는 Item 컴포넌트
+
 const TodoItem = ({id, name, checked, handleCheck, handleDelete}) => {
   return(
     <li className="flex items-center gap-[10px] p-[5px]">
