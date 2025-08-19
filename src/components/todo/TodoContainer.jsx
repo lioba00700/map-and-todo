@@ -2,18 +2,11 @@ import { useEffect, useState } from "react";
 import TodoList from "./TodoList";
 import Button from "../ui/Button";
 import Input from "../ui/Input";
-
-const mockTodos = [
-  {id:1, name: '책상 청소하기', checked: false},
-  {id:2, name: '자리 청소하기', checked: false},
-  {id:3, name: '침대 청소하기', checked: false},
-  {id:4, name: '키보드 청소하기', checked: false},
-  {id:5, name: '마당 청소하기', checked: false},
-]
+import { deleteTodo, getTodos, patchTodo, postTodo } from "../../api/TodoAPI";
 
 const TodoContainer = () => {
   //전체 일정
-  const [todos, setTodos] = useState(mockTodos);
+  const [todos, setTodos] = useState([]);
 
 
   //완료 미완료 일정 배열 구분
@@ -27,32 +20,54 @@ const TodoContainer = () => {
     setNewName(e.target.value);
   }
 
-  const handleAddTodo = () => {
-    const newId = Math.max(...todos.map((todo)=>todo.id)) +1;
-    setTodos((prev)=> ([...prev, {
-      id: newId,
+  const handleAddTodo = async () => {
+    const newId = todos.length>0 ? Math.max(...todos.map((todo)=>todo.id)) +1 : 1;
+    const newTodo = {
+      id: String(newId),
       name: newName,
       checked: false,
-    }]))
-    setNewName('');
+    }
+    const res = await postTodo(newTodo);
+    if(res.pass){
+      setTodos((prev)=> ([...prev, newTodo]))
+      setNewName('');
+    }
   }
   
-  const handleCheckTodo = (id) => {
-    setTodos((prev)=>
-      prev.map((todo)=>
-        todo.id === id ? {...todo, checked:!todo.checked} : todo
-      )
-    );
+  const handleCheckTodo = async (id, checked) => {
+    const res = await patchTodo({id, checked});
+    if(res.pass){
+      setTodos((prev)=>
+        prev.map((todo)=>
+          todo.id === id ? {...todo, checked:!todo.checked} : todo
+        )
+      );
+    }
   }
 
-  const handleDeleteTodo = (id) => {
-    setTodos((prev)=>
-      prev.filter((todo)=>todo.id !== id)  
-    )
+  const handleDeleteTodo = async (id) => {
+    const res = await deleteTodo({id})
+    if(res.pass){
+      setTodos((prev)=>
+        prev.filter((todo)=>todo.id !== id)  
+      )
+      setCompleteTodos([]);
+      setIncompleteTodos([]);
+      console.log(todos);
+    }
   }
+
+  useEffect(() => {
+    const getData = async () => {
+      const res = await getTodos();
+      setTodos(res.data); 
+    }
+    getData();
+  }, []);
 
   useEffect(()=>{
     //완료됨 일정과 미완료된 일정 구분
+    if(todos.length < 1)return;
     const incompleted = todos.filter((todo)=>!todo.checked);
     const completed = todos.filter((todo)=>todo.checked);
 

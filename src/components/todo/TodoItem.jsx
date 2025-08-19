@@ -4,7 +4,7 @@ const TodoItem = ({id, name, checked, handleCheck, handleDelete}) => {
       <input 
         className="w-[20px] h-[20px] cursor-pointer"
         type="checkbox" 
-        onChange={()=>handleCheck(id)} 
+        onChange={()=>handleCheck(id, checked)} 
         checked={checked}/>
       <p className={`${checked ? 'line-through text-gray-400' : null} font-medium w-sm max-sm:w-[75%]`}>{name}</p>
       <button 
